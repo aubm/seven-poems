@@ -2,19 +2,27 @@ package poems
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 )
 
 func GetPoemsList() PoemsList {
-	poems := getPoemStructsFromJsonMockFile()
+	poems := getPoemsListFromJsonMockFile()
 	return poems
 }
 
-func getOnePoemById() {
+func GetOnePoemBySlug(slug string) (Poem, error) {
+	poems := getPoemsListFromJsonMockFile()
+	for _, poem := range poems {
+		if slug == poem.Slug {
+			return poem, nil
+		}
+	}
+	return Poem{}, errors.New("No poem found")
 }
 
-func getPoemStructsFromJsonMockFile() PoemsList {
+func getPoemsListFromJsonMockFile() PoemsList {
 	jsonBlob, err := ioutil.ReadFile("./poems_mocks.json")
 	if err != nil {
 		fmt.Println("error:", err)
